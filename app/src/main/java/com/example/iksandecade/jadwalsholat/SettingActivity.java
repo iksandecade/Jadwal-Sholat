@@ -18,8 +18,6 @@ import com.example.iksandecade.jadwalsholat.greendao.Jadwal;
 import com.example.iksandecade.jadwalsholat.greendao.Kota;
 import com.example.iksandecade.jadwalsholat.greendao.KotaDao;
 import com.example.iksandecade.jadwalsholat.model.JadwalBulanModel;
-import com.example.iksandecade.jadwalsholat.model.JadwalModel;
-import com.example.iksandecade.jadwalsholat.model.ResultModel;
 import com.example.iksandecade.jadwalsholat.model.SecondResultModel;
 import com.example.iksandecade.jadwalsholat.retrofit.JadwalServiceClient;
 import com.example.iksandecade.jadwalsholat.retrofit.ServiceGenerator;
@@ -99,10 +97,10 @@ public class SettingActivity extends AppCompatActivity {
 
     private void callAPI() {
         JadwalServiceClient client = ServiceGenerator.createService(JadwalServiceClient.class);
-        Observable<JadwalModel> call = client.callJadwal(city, "7", "0", JadwalUtils.getNowYear(), JadwalUtils.getNowMonth(), JadwalUtils.getNowDay());
+        Observable<JadwalBulanModel> call = client.callJadwalBulan(city, "7", "0", JadwalUtils.getNowYear(), JadwalUtils.getNowMonth());
         subscription = call.subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<JadwalModel>() {
+                .subscribe(new Subscriber<JadwalBulanModel>() {
                     @Override
                     public void onCompleted() {
                         progressDialog.cancel();
@@ -114,20 +112,20 @@ public class SettingActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(JadwalModel jadwalBulanModel) {
+                    public void onNext(JadwalBulanModel jadwalBulanModel) {
                         try {
 
                             String region = jadwalBulanModel.getData().getAddress();
-                            ResultModel secondResultModels = jadwalBulanModel.getResult();
+                            List<SecondResultModel> secondResultModels = jadwalBulanModel.getResult();
                             Kota kota = daoSession.getKotaDao().queryBuilder().where(KotaDao.Properties.NamaKota.eq(city)).unique();
                             if (!isExist(region, daoSession.getJadwalDao().queryBuilder().list())) {
-//                                for (int i = 0; i < secondResultModels.size(); i++) {
-                                    String day = secondResultModels.getDay();
-                                    String subuh = secondResultModels.getFajr();
-                                    String dzuhur = secondResultModels.getDhuhr();
-                                    String ashar = secondResultModels.getAsr();
-                                    String magrib = secondResultModels.getMaghrib();
-                                    String isya = secondResultModels.getIsha();
+                                for (int i = 0; i < secondResultModels.size(); i++) {
+                                    String day = secondResultModels.get(i).getDay();
+                                    String subuh = secondResultModels.get(i).getTime().getFajr();
+                                    String dzuhur = secondResultModels.get(i).getTime().getDhuhr();
+                                    String ashar = secondResultModels.get(i).getTime().getAsr();
+                                    String magrib = secondResultModels.get(i).getTime().getMaghrib();
+                                    String isya = secondResultModels.get(i).getTime().getIsha();
 
                                     Jadwal jadwal = new Jadwal();
                                     jadwal.setId(kota.getIdKota() + JadwalUtils.getDay(day));
@@ -140,8 +138,10 @@ public class SettingActivity extends AppCompatActivity {
                                     jadwal.setCreatedAt(System.currentTimeMillis());
                                     jadwal.setFilter(JadwalUtils.getDay(day));
 //                                    daoSession.getJadwalDao().insert(jadwal);
+//                                    int progress = (secondResultModels.size() / 100) * i;
+//                                    progressDialog.setProgress(progress);
 
-//                                }
+                                }
                             }
 //                            Intent intent = new Intent(SettingActivity.this, CalendarV2Activity.class);
 //                            startActivity(intent);
