@@ -12,7 +12,7 @@ import org.greenrobot.greendao.annotation.Generated;
 public class Jadwal {
 
     @Id
-    private Long id;
+    private String id;
 
     @NotNull
     private Long subuh;
@@ -22,9 +22,13 @@ public class Jadwal {
     private Long isya;
     private Long createdAt;
     private Long updatedAt;
-    @Generated(hash = 272405874)
-    public Jadwal(Long id, @NotNull Long subuh, Long dzuhur, Long ashar,
-            Long magrib, Long isya, Long createdAt, Long updatedAt) {
+    private String region;
+    private Long filter;
+    
+    @Generated(hash = 2095419015)
+    public Jadwal(String id, @NotNull Long subuh, Long dzuhur, Long ashar,
+            Long magrib, Long isya, Long createdAt, Long updatedAt, String region,
+            Long filter) {
         this.id = id;
         this.subuh = subuh;
         this.dzuhur = dzuhur;
@@ -33,14 +37,16 @@ public class Jadwal {
         this.isya = isya;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.region = region;
+        this.filter = filter;
     }
     @Generated(hash = 2080059390)
     public Jadwal() {
     }
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public Long getSubuh() {
@@ -85,5 +91,18 @@ public class Jadwal {
     public void setUpdatedAt(Long updatedAt) {
         this.updatedAt = updatedAt;
     }
-
+    public String getRegion() {
+        return this.region;
+    }
+    public void setRegion(String region) {
+        this.region = region;
+    }
+    public Long getFilter() {
+        return this.filter;
+    }
+    public void setFilter(Long filter) {
+        this.filter = filter;
+    }
+    
+  
 }

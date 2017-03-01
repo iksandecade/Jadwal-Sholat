@@ -32,5 +32,13 @@ public interface JadwalServiceClient {
             @Query("month") String bulan
     );
 
+    @GET("/api/pray-times")
+    Observable<JadwalBulanModel> callJadwalTahun(
+            @Query("address") String lokasi,
+            @Query("timezone") String timezone,
+            @Query("method") String method,
+            @Query("year") String year
+    );
+
 
 }
