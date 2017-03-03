@@ -14,6 +14,7 @@ public class SplashActivity extends AppCompatActivity {
     DaoSession daoSession;
     String[] namaKota;
     String[] idKota;
+    String[] timeZone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +97,49 @@ public class SplashActivity extends AppCompatActivity {
                     "MKI"
             };
 
+            timeZone = new String[]{
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WIB",
+                    "WITA",
+                    "WIB",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WITA",
+                    "WIT",
+                    "WIT",
+                    "WIT",
+                    "WIT"
+            };
+
 
             for (int i = 0; i < namaKota.length; i++) {
                 Kota kota = new Kota();
                 kota.setIdKota(idKota[i]);
                 kota.setNamaKota(namaKota[i]);
+                kota.setTimeZone(timeZone[i]);
                 daoSession.getKotaDao().insert(kota);
             }
 

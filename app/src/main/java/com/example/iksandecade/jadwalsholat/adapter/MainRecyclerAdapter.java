@@ -37,7 +37,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         holder.tvJadwal.setText(jadwal);
         holder.tvWaktu.setText(getWaktu(waktu));
-        holder.tvRemaining.setText(getSisa(waktu));
     }
 
     @Override
@@ -48,13 +47,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     class Holder extends RecyclerView.ViewHolder {
         TextView tvJadwal;
         TextView tvWaktu;
-        TextView tvRemaining;
 
         public Holder(View itemView) {
             super(itemView);
             tvJadwal = (TextView) itemView.findViewById(R.id.tvJadwal);
             tvWaktu = (TextView) itemView.findViewById(R.id.tvWaktu);
-            tvRemaining = (TextView) itemView.findViewById(R.id.tvRemaining);
         }
     }
 
@@ -65,27 +62,4 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return simpleDateFormat.format(date);
     }
 
-    private String getSisa(long data) {
-        String result = "";
-        long milliseconds1 = System.currentTimeMillis();
-        long milliseconds2 = data;
-
-        long diff = milliseconds2 - milliseconds1;
-        long diffSeconds = diff / 1000;
-        long diffMinutes = diff / (60 * 1000);
-        long diffHours = diff / (60 * 60 * 1000);
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-        if (diffDays != 0 && diffDays > 0) {
-            result = diffDays + " Hari";
-        } else if (diffHours != 0 && diffHours > 0) {
-            result = diffHours + " Jam";
-        } else if (diffMinutes > 0) {
-            result = diffMinutes + " Menit";
-        } else{
-//            result
-        }
-
-        return result;
-    }
 }

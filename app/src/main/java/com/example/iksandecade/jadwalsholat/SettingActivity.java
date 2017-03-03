@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.iksandecade.jadwalsholat.greendao.DaoHandler;
 import com.example.iksandecade.jadwalsholat.greendao.DaoSession;
@@ -18,10 +20,13 @@ import com.example.iksandecade.jadwalsholat.greendao.Jadwal;
 import com.example.iksandecade.jadwalsholat.greendao.Kota;
 import com.example.iksandecade.jadwalsholat.greendao.KotaDao;
 import com.example.iksandecade.jadwalsholat.model.JadwalBulanModel;
+import com.example.iksandecade.jadwalsholat.model.JadwalModel;
 import com.example.iksandecade.jadwalsholat.model.SecondResultModel;
+import com.example.iksandecade.jadwalsholat.receiver.ConnectionReceiver;
 import com.example.iksandecade.jadwalsholat.retrofit.JadwalServiceClient;
 import com.example.iksandecade.jadwalsholat.retrofit.ServiceGenerator;
 import com.example.iksandecade.jadwalsholat.utils.JadwalUtils;
+import com.example.iksandecade.jadwalsholat.utils.SPJadwalSholat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +35,8 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class SettingActivity extends AppCompatActivity {
@@ -89,8 +96,12 @@ public class SettingActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_save) {
-            progressDialog.show();
-            callAPI();
+            if (ConnectionReceiver.isConnecting(this)) {
+                progressDialog.show();
+                callAPI();
+            } else {
+                Toast.makeText(this, "No internet Connection", Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -98,12 +109,16 @@ public class SettingActivity extends AppCompatActivity {
     private void callAPI() {
         JadwalServiceClient client = ServiceGenerator.createService(JadwalServiceClient.class);
         Observable<JadwalBulanModel> call = client.callJadwalBulan(city, "7", "0", JadwalUtils.getNowYear(), JadwalUtils.getNowMonth());
+
         subscription = call.subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<JadwalBulanModel>() {
                     @Override
                     public void onCompleted() {
                         progressDialog.cancel();
+                        SPJadwalSholat.setIsFirst(SettingActivity.this, false);
+                        Intent intent = new Intent(SettingActivity.this, CalendarV2Activity.class);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -137,14 +152,14 @@ public class SettingActivity extends AppCompatActivity {
                                     jadwal.setRegion(city);
                                     jadwal.setCreatedAt(System.currentTimeMillis());
                                     jadwal.setFilter(JadwalUtils.getDay(day));
-//                                    daoSession.getJadwalDao().insert(jadwal);
+                                    daoSession.getJadwalDao().insert(jadwal);
+                                    SPJadwalSholat.setKota(SettingActivity.this, kota.getNamaKota());
 //                                    int progress = (secondResultModels.size() / 100) * i;
 //                                    progressDialog.setProgress(progress);
 
                                 }
                             }
-//                            Intent intent = new Intent(SettingActivity.this, CalendarV2Activity.class);
-//                            startActivity(intent);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

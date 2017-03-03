@@ -23,4 +23,18 @@ public class Events {
             return secondMessage;
         }
     }
+
+    public static class DayMessage {
+        private String day;
+
+        public DayMessage(String day) {
+            this.day = day;
+        }
+
+
+        public String getDay() {
+            return day;
+        }
+
+    }
 }
