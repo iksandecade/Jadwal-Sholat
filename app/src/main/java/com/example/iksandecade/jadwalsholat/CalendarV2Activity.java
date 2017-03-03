@@ -57,16 +57,10 @@ public class CalendarV2Activity extends AppCompatActivity {
         tvShalat = (TextView) findViewById(R.id.tvShalat);
         daoSession = DaoHandler.getInstance(this);
 
-        jadwalList = daoSession.getJadwalDao().queryBuilder().where(JadwalDao.Properties.Id.between(getNow(), getNow() + (24 * 60 * 60 * 1000))).list();
+        jadwalList = daoSession.getJadwalDao().queryBuilder().where(JadwalDao.Properties.Filter.between(getNow(), getNow() + ((24 * 60 * 60 * 1000))*7), JadwalDao.Properties.Region.eq(SPJadwalSholat.getKota(this))).list();
+        tabLayout.addTab(tabLayout.newTab().setText("today"));
+        tabLayout.addTab(tabLayout.newTab().setText("today"));
 
-        for (int i = 0; i < jadwalList.size(); i++) {
-            long time = jadwalList.get(i).getFilter();
-            if (time == getNow()) {
-                tabLayout.addTab(tabLayout.newTab().setText("Today"));
-            } else {
-                tabLayout.addTab(tabLayout.newTab().setText("Tomorrow"));
-            }
-        }
         calendarPagerAdapter = new CalendarPagerAdapter(this, jadwalList);
         vpCalendar.setAdapter(calendarPagerAdapter);
         addNotification();
@@ -141,6 +135,11 @@ public class CalendarV2Activity extends AppCompatActivity {
         tvRemaining.setText(activityActivityMessage.getMessage());
         tvShalat.setText(activityActivityMessage.getSecondMessage());
 
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void getMessage(Events.DayMessage dayMessage) {
+        tabLayout.getTabAt(0).setText(dayMessage.getDay());
     }
 
     @Override

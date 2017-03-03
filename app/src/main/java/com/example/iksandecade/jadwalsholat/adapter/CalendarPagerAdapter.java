@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,128 +50,255 @@ public class CalendarPagerAdapter extends PagerAdapter {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context.getApplicationContext());
         List<WaktuModel> waktuModels = new ArrayList<>();
 
+//        if (position == 0) {
+//            long subuh = jadwalList.get(0).getSubuh();
+//            long dzuhur = jadwalList.get(0).getDzuhur();
+//            long ashar = jadwalList.get(0).getAshar();
+//            long magrib = jadwalList.get(0).getMagrib();
+//            long isya = jadwalList.get(0).getIsya();
+//            long lastSecond = 0;
+//            Events.DayMessage dayMessage = new Events.DayMessage("saha");
+//            GlobalBus.getEventBus().postSticky(dayMessage);
+//
+//            SPJadwalSholat.setTodaySubuh(context, subuh);
+//            SPJadwalSholat.setTodayDzuhur(context, dzuhur);
+//            SPJadwalSholat.setTodayAshar(context, ashar);
+//            SPJadwalSholat.setTodayMaghrib(context, magrib);
+//            SPJadwalSholat.setTodayIsya(context, isya);
+//
+//            String[] message = {"", ""};
+//
+//            if (isCondition(subuh)) {
+//
+//                WaktuModel waktuModel1 = new WaktuModel();
+//                waktuModel1.setJadwal(SHALAT_DZUHUR);
+//                waktuModel1.setWaktu(dzuhur);
+//                waktuModels.add(0, waktuModel1);
+//
+//                WaktuModel waktuModel2 = new WaktuModel();
+//                waktuModel2.setJadwal(SHALAT_ASHAR);
+//                waktuModel2.setWaktu(ashar);
+//                waktuModels.add(1, waktuModel2);
+//
+//                WaktuModel waktuModel3 = new WaktuModel();
+//                waktuModel3.setJadwal(SHALAT_MAGHRIB);
+//                waktuModel3.setWaktu(magrib);
+//                waktuModels.add(2, waktuModel3);
+//
+//                WaktuModel waktuModel4 = new WaktuModel();
+//                waktuModel4.setJadwal(SHALAT_ISYA);
+//                waktuModel4.setWaktu(isya);
+//                waktuModels.add(3, waktuModel4);
+//
+//                message[0] = getSisa(subuh) + " to";
+//                message[1] = SHALAT_SUBUH;
+//                lastSecond = subuh;
+//            } else if (isCondition(dzuhur)) {
+//
+//                WaktuModel waktuModel2 = new WaktuModel();
+//                waktuModel2.setJadwal(SHALAT_ASHAR);
+//                waktuModel2.setWaktu(ashar);
+//                waktuModels.add(0, waktuModel2);
+//
+//                WaktuModel waktuModel3 = new WaktuModel();
+//                waktuModel3.setJadwal(SHALAT_MAGHRIB);
+//                waktuModel3.setWaktu(magrib);
+//                waktuModels.add(1, waktuModel3);
+//
+//                WaktuModel waktuModel4 = new WaktuModel();
+//                waktuModel4.setJadwal(SHALAT_ISYA);
+//                waktuModel4.setWaktu(isya);
+//                waktuModels.add(2, waktuModel4);
+//
+//                message[0] = getSisa(dzuhur) + " to";
+//                message[1] = SHALAT_DZUHUR;
+//                lastSecond = dzuhur;
+//            } else if (isCondition(ashar)) {
+//
+//                WaktuModel waktuModel3 = new WaktuModel();
+//                waktuModel3.setJadwal(SHALAT_MAGHRIB);
+//                waktuModel3.setWaktu(magrib);
+//                waktuModels.add(0, waktuModel3);
+//
+//                WaktuModel waktuModel4 = new WaktuModel();
+//                waktuModel4.setJadwal(SHALAT_ISYA);
+//                waktuModel4.setWaktu(isya);
+//                waktuModels.add(1, waktuModel4);
+//
+//                message[0] = getSisa(ashar) + " to";
+//                message[1] = SHALAT_ASHAR;
+//                lastSecond = ashar;
+//            } else if (isCondition(magrib)) {
+//
+//                WaktuModel waktuModel4 = new WaktuModel();
+//                waktuModel4.setJadwal(SHALAT_ISYA);
+//                waktuModel4.setWaktu(isya);
+//                waktuModels.add(0, waktuModel4);
+//
+//                message[0] = getSisa(magrib) + " to";
+//                message[1] = SHALAT_MAGHRIB;
+//                lastSecond = magrib;
+//            } else if (isCondition(isya)) {
+//
+//                message[0] = getSisa(isya) + " to";
+//                message[1] = SHALAT_ISYA;
+//                lastSecond = isya;
+//            }
+//            SPJadwalSholat.setLastSecond(context, lastSecond);
+//            Events.ActivityActivityMessage activityActivityMessage = new Events.ActivityActivityMessage(message[0], message[1]);
+//            GlobalBus.getEventBus().postSticky(activityActivityMessage);
+//
+//        } else {
+//            WaktuModel waktuModel = new WaktuModel();
+//            waktuModel.setJadwal("Subuh");
+//            waktuModel.setWaktu(jadwalList.get(position).getSubuh());
+//            waktuModels.add(0, waktuModel);
+//
+//            WaktuModel waktuModel1 = new WaktuModel();
+//            waktuModel1.setJadwal("Dzuhur");
+//            waktuModel1.setWaktu(jadwalList.get(position).getDzuhur());
+//            waktuModels.add(1, waktuModel1);
+//
+//            WaktuModel waktuModel2 = new WaktuModel();
+//            waktuModel2.setJadwal("Ashar");
+//            waktuModel2.setWaktu(jadwalList.get(position).getAshar());
+//            waktuModels.add(2, waktuModel2);
+//
+//            WaktuModel waktuModel3 = new WaktuModel();
+//            waktuModel3.setJadwal("Maghrib");
+//            waktuModel3.setWaktu(jadwalList.get(position).getMagrib());
+//            waktuModels.add(3, waktuModel3);
+//
+//            WaktuModel waktuModel4 = new WaktuModel();
+//            waktuModel4.setJadwal("Isya");
+//            waktuModel4.setWaktu(jadwalList.get(position).getIsya());
+//            waktuModels.add(4, waktuModel4);
+//        }
+        for (int i = 0; i < jadwalList.size(); i++) {
+            if (position == 0) {
+                long subuh = jadwalList.get(0).getSubuh();
+                long dzuhur = jadwalList.get(0).getDzuhur();
+                long ashar = jadwalList.get(0).getAshar();
+                long magrib = jadwalList.get(0).getMagrib();
+                long isya = jadwalList.get(0).getIsya();
+                long lastSecond = 0;
+                Events.DayMessage dayMessage = new Events.DayMessage("saha");
+                GlobalBus.getEventBus().postSticky(dayMessage);
 
-        if (position == 0) {
-            long subuh = jadwalList.get(0).getSubuh();
-            long dzuhur = jadwalList.get(0).getDzuhur();
-            long ashar = jadwalList.get(0).getAshar();
-            long magrib = jadwalList.get(0).getMagrib();
-            long isya = jadwalList.get(0).getIsya();
-            long lastSecond = 0;
+                SPJadwalSholat.setTodaySubuh(context, subuh);
+                SPJadwalSholat.setTodayDzuhur(context, dzuhur);
+                SPJadwalSholat.setTodayAshar(context, ashar);
+                SPJadwalSholat.setTodayMaghrib(context, magrib);
+                SPJadwalSholat.setTodayIsya(context, isya);
 
-            SPJadwalSholat.setTodaySubuh(context, subuh);
-            SPJadwalSholat.setTodayDzuhur(context, dzuhur);
-            SPJadwalSholat.setTodayAshar(context, ashar);
-            SPJadwalSholat.setTodayMaghrib(context, magrib);
-            SPJadwalSholat.setTodayIsya(context, isya);
+                String[] message = {"", ""};
 
-            String[] message = {"", ""};
+                if (isCondition(subuh)) {
 
-            if (isCondition(subuh)) {
+                    WaktuModel waktuModel1 = new WaktuModel();
+                    waktuModel1.setJadwal(SHALAT_DZUHUR);
+                    waktuModel1.setWaktu(dzuhur);
+                    waktuModels.add(0, waktuModel1);
+
+                    WaktuModel waktuModel2 = new WaktuModel();
+                    waktuModel2.setJadwal(SHALAT_ASHAR);
+                    waktuModel2.setWaktu(ashar);
+                    waktuModels.add(1, waktuModel2);
+
+                    WaktuModel waktuModel3 = new WaktuModel();
+                    waktuModel3.setJadwal(SHALAT_MAGHRIB);
+                    waktuModel3.setWaktu(magrib);
+                    waktuModels.add(2, waktuModel3);
+
+                    WaktuModel waktuModel4 = new WaktuModel();
+                    waktuModel4.setJadwal(SHALAT_ISYA);
+                    waktuModel4.setWaktu(isya);
+                    waktuModels.add(3, waktuModel4);
+
+                    message[0] = getSisa(subuh) + " to";
+                    message[1] = SHALAT_SUBUH;
+                    lastSecond = subuh;
+                } else if (isCondition(dzuhur)) {
+
+                    WaktuModel waktuModel2 = new WaktuModel();
+                    waktuModel2.setJadwal(SHALAT_ASHAR);
+                    waktuModel2.setWaktu(ashar);
+                    waktuModels.add(0, waktuModel2);
+
+                    WaktuModel waktuModel3 = new WaktuModel();
+                    waktuModel3.setJadwal(SHALAT_MAGHRIB);
+                    waktuModel3.setWaktu(magrib);
+                    waktuModels.add(1, waktuModel3);
+
+                    WaktuModel waktuModel4 = new WaktuModel();
+                    waktuModel4.setJadwal(SHALAT_ISYA);
+                    waktuModel4.setWaktu(isya);
+                    waktuModels.add(2, waktuModel4);
+
+                    message[0] = getSisa(dzuhur) + " to";
+                    message[1] = SHALAT_DZUHUR;
+                    lastSecond = dzuhur;
+                } else if (isCondition(ashar)) {
+
+                    WaktuModel waktuModel3 = new WaktuModel();
+                    waktuModel3.setJadwal(SHALAT_MAGHRIB);
+                    waktuModel3.setWaktu(magrib);
+                    waktuModels.add(0, waktuModel3);
+
+                    WaktuModel waktuModel4 = new WaktuModel();
+                    waktuModel4.setJadwal(SHALAT_ISYA);
+                    waktuModel4.setWaktu(isya);
+                    waktuModels.add(1, waktuModel4);
+
+                    message[0] = getSisa(ashar) + " to";
+                    message[1] = SHALAT_ASHAR;
+                    lastSecond = ashar;
+                } else if (isCondition(magrib)) {
+
+                    WaktuModel waktuModel4 = new WaktuModel();
+                    waktuModel4.setJadwal(SHALAT_ISYA);
+                    waktuModel4.setWaktu(isya);
+                    waktuModels.add(0, waktuModel4);
+
+                    message[0] = getSisa(magrib) + " to";
+                    message[1] = SHALAT_MAGHRIB;
+                    lastSecond = magrib;
+                } else if (isCondition(isya)) {
+
+                    message[0] = getSisa(isya) + " to";
+                    message[1] = SHALAT_ISYA;
+                    lastSecond = isya;
+                }
+                SPJadwalSholat.setLastSecond(context, lastSecond);
+                Events.ActivityActivityMessage activityActivityMessage = new Events.ActivityActivityMessage(message[0], message[1]);
+                GlobalBus.getEventBus().postSticky(activityActivityMessage);
+
+            } else {
+                WaktuModel waktuModel = new WaktuModel();
+                waktuModel.setJadwal("Subuh");
+                waktuModel.setWaktu(jadwalList.get(position).getSubuh());
+                waktuModels.add(0, waktuModel);
 
                 WaktuModel waktuModel1 = new WaktuModel();
-                waktuModel1.setJadwal(SHALAT_DZUHUR);
-                waktuModel1.setWaktu(dzuhur);
-                waktuModels.add(0, waktuModel1);
+                waktuModel1.setJadwal("Dzuhur");
+                waktuModel1.setWaktu(jadwalList.get(position).getDzuhur());
+                waktuModels.add(1, waktuModel1);
 
                 WaktuModel waktuModel2 = new WaktuModel();
-                waktuModel2.setJadwal(SHALAT_ASHAR);
-                waktuModel2.setWaktu(ashar);
-                waktuModels.add(1, waktuModel2);
+                waktuModel2.setJadwal("Ashar");
+                waktuModel2.setWaktu(jadwalList.get(position).getAshar());
+                waktuModels.add(2, waktuModel2);
 
                 WaktuModel waktuModel3 = new WaktuModel();
-                waktuModel3.setJadwal(SHALAT_MAGHRIB);
-                waktuModel3.setWaktu(magrib);
-                waktuModels.add(2, waktuModel3);
+                waktuModel3.setJadwal("Maghrib");
+                waktuModel3.setWaktu(jadwalList.get(position).getMagrib());
+                waktuModels.add(3, waktuModel3);
 
                 WaktuModel waktuModel4 = new WaktuModel();
-                waktuModel4.setJadwal(SHALAT_ISYA);
-                waktuModel4.setWaktu(isya);
-                waktuModels.add(3, waktuModel4);
-
-                message[0] = getSisa(subuh) + " to";
-                message[1] = SHALAT_SUBUH;
-                lastSecond = subuh;
-            } else if (isCondition(dzuhur)) {
-
-                WaktuModel waktuModel2 = new WaktuModel();
-                waktuModel2.setJadwal(SHALAT_ASHAR);
-                waktuModel2.setWaktu(ashar);
-                waktuModels.add(0, waktuModel2);
-
-                WaktuModel waktuModel3 = new WaktuModel();
-                waktuModel3.setJadwal(SHALAT_MAGHRIB);
-                waktuModel3.setWaktu(magrib);
-                waktuModels.add(1, waktuModel3);
-
-                WaktuModel waktuModel4 = new WaktuModel();
-                waktuModel4.setJadwal(SHALAT_ISYA);
-                waktuModel4.setWaktu(isya);
-                waktuModels.add(2, waktuModel4);
-
-                message[0] = getSisa(dzuhur) + " to";
-                message[1] = SHALAT_DZUHUR;
-                lastSecond = dzuhur;
-            } else if (isCondition(ashar)) {
-
-                WaktuModel waktuModel3 = new WaktuModel();
-                waktuModel3.setJadwal(SHALAT_MAGHRIB);
-                waktuModel3.setWaktu(magrib);
-                waktuModels.add(0, waktuModel3);
-
-                WaktuModel waktuModel4 = new WaktuModel();
-                waktuModel4.setJadwal(SHALAT_ISYA);
-                waktuModel4.setWaktu(isya);
-                waktuModels.add(1, waktuModel4);
-
-                message[0] = getSisa(ashar) + " to";
-                message[1] = SHALAT_ASHAR;
-                lastSecond = ashar;
-            } else if (isCondition(magrib)) {
-
-                WaktuModel waktuModel4 = new WaktuModel();
-                waktuModel4.setJadwal(SHALAT_ISYA);
-                waktuModel4.setWaktu(isya);
-                waktuModels.add(0, waktuModel4);
-
-                message[0] = getSisa(magrib) + " to";
-                message[1] = SHALAT_MAGHRIB;
-                lastSecond = magrib;
-            } else if (isCondition(isya)) {
-
-                message[0] = getSisa(isya) + " to";
-                message[1] = SHALAT_ISYA;
-                lastSecond = isya;
+                waktuModel4.setJadwal("Isya");
+                waktuModel4.setWaktu(jadwalList.get(position).getIsya());
+                waktuModels.add(4, waktuModel4);
             }
-            SPJadwalSholat.setLastSecond(context, lastSecond);
-            Events.ActivityActivityMessage activityActivityMessage = new Events.ActivityActivityMessage(message[0], message[1]);
-            GlobalBus.getEventBus().postSticky(activityActivityMessage);
-
-        } else {
-            WaktuModel waktuModel = new WaktuModel();
-            waktuModel.setJadwal("Subuh");
-            waktuModel.setWaktu(jadwalList.get(position).getSubuh());
-            waktuModels.add(0, waktuModel);
-
-            WaktuModel waktuModel1 = new WaktuModel();
-            waktuModel1.setJadwal("Dzuhur");
-            waktuModel1.setWaktu(jadwalList.get(position).getDzuhur());
-            waktuModels.add(1, waktuModel1);
-
-            WaktuModel waktuModel2 = new WaktuModel();
-            waktuModel2.setJadwal("Ashar");
-            waktuModel2.setWaktu(jadwalList.get(position).getAshar());
-            waktuModels.add(2, waktuModel2);
-
-            WaktuModel waktuModel3 = new WaktuModel();
-            waktuModel3.setJadwal("Maghrib");
-            waktuModel3.setWaktu(jadwalList.get(position).getMagrib());
-            waktuModels.add(3, waktuModel3);
-
-            WaktuModel waktuModel4 = new WaktuModel();
-            waktuModel4.setJadwal("Isya");
-            waktuModel4.setWaktu(jadwalList.get(position).getIsya());
-            waktuModels.add(4, waktuModel4);
         }
         MainRecyclerAdapter mainRecyclerAdapter = new MainRecyclerAdapter(waktuModels);
 

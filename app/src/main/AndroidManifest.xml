@@ -3,6 +3,8 @@
     package="com.example.iksandecade.jadwalsholat">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -10,19 +12,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity android:name=".CalendarV2Activity"></activity>
-         <!--<activity android:name=".SettingActivity"></activity>-->
+        <activity android:name=".CalendarV2Activity" />
+        <activity android:name=".SettingActivity" />
 
         <service android:name=".service.NotificationService" />
 
-        <!--<activity android:name=".SplashActivity"></activity>-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBS_ElLJn4fu6EUHjMmCWE9rAXi4paeonA" />
+        <!-- <activity android:name=".SplashActivity"></activity> -->
+        <!--<activity android:name=".GetActivity"></activity>-->
     </application>
 
 </manifest>
