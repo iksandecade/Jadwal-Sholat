@@ -84,12 +84,7 @@ public class JadwalUtils {
     }
 
     public static boolean hasGPSDevice(Context context) {
-        final LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (manager == null)
-            return false;
-        final List<String> provider = manager.getAllProviders();
-        if (provider == null)
-            return false;
-        return provider.contains(LocationManager.GPS_PROVIDER);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }

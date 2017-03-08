@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class SplashActivity extends AppCompatActivity implements LocationListener{
+public class SplashActivity extends AppCompatActivity implements LocationListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     DaoSession daoSession;
@@ -41,148 +41,56 @@ public class SplashActivity extends AppCompatActivity implements LocationListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        if (isGranted()) {
-            if (SPJadwalSholat.getIsFirst(this)) {
+
+        if (SPJadwalSholat.getIsFirst(this)) {
+            insertCity();
+            if (isGranted()) {
                 firstTime();
             } else {
-                goToHome();
-
+                requestPermission();
             }
         } else {
-            requestPermission();
+            goToHome();
+
         }
 
     }
 
-    private void firstTime() {
+    private void insertCity() {
         daoSession = DaoHandler.getInstance(this);
+        int avaiable = daoSession.getKotaDao().queryBuilder().list().size();
 
-        namaKota = new String[]{
-                "Jakarta",
-                "Banda Aceh",
-                "Medan",
-                "Padang",
-                "Pekanbaru",
-                "Jambi",
-                "Palembang",
-                "Bengkulu",
-                "Bandar Lampung",
-                "Pangkal Pinang",
-                "Tanjung Pinang",
-                "Yogyakarta",
-                "Bandung",
-                "Semarang",
-                "Surabaya",
-                "Serang",
-                "Denpasar",
-                "Kupang",
-                "Mataram",
-                "Pontianak",
-                "Palangka Raya",
-                "Banjarmasin",
-                "Samarinda",
-                "Tanjung Selor",
-                "Manado",
-                "Palu",
-                "Makassar",
-                "Kendari",
-                "Mamuju",
-                "Gorontalo",
-                "Ambon",
-                "Sofifi",
-                "Jayapura",
-                "Manokwari"
-        };
+        if (avaiable <= 0) {
 
-        idKota = new String[]{
-                "JKT",
-                "ACH",
-                "MDN",
-                "PDG",
-                "PKB",
-                "JMB",
-                "PLB",
-                "BKL",
-                "BL",
-                "PP",
-                "TP",
-                "YKT",
-                "BDG",
-                "SRG",
-                "SBY",
-                "SAG",
-                "DPR",
-                "KPG",
-                "MTM",
-                "PON",
-                "PR",
-                "BJN",
-                "SMR",
-                "TS",
-                "MND",
-                "PAL",
-                "MKS",
-                "KDI",
-                "MMU",
-                "GOR",
-                "MBO",
-                "SFF",
-                "JPR",
-                "MKI"
-        };
+            namaKota = new String[]{"Jakarta", "Banda Aceh", "Medan", "Padang", "Pekanbaru", "Jambi", "Palembang", "Bengkulu",
+                    "Bandar Lampung", "Pangkal Pinang", "Tanjung Pinang", "Yogyakarta", "Bandung", "Semarang", "Surabaya", "Serang",
+                    "Denpasar", "Kupang", "Mataram", "Pontianak", "Palangka Raya", "Banjarmasin", "Samarinda", "Tanjung Selor",
+                    "Manado", "Palu", "Makassar", "Kendari", "Mamuju", "Gorontalo", "Ambon", "Sofifi", "Jayapura", "Manokwari"};
 
-        timeZone = new String[]{
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WIB",
-                "WITA",
-                "WIB",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WITA",
-                "WIT",
-                "WIT",
-                "WIT",
-                "WIT"
-        };
+            idKota = new String[]{"JKT", "ACH", "MDN", "PDG", "PKB", "JMB", "PLB", "BKL", "BL", "PP", "TP", "YKT", "BDG", "SRG",
+                    "SBY", "SAG", "DPR", "KPG", "MTM", "PON", "PR", "BJN", "SMR", "TS", "MND", "PAL", "MKS", "KDI", "MMU", "GOR",
+                    "MBO", "SFF", "JPR", "MKI"};
 
+            timeZone = new String[]{"WIB", "WIB", "WIB", "WIB", "WIB", "WIB", "WIB", "WIB", "WIB", "WIB", "WIB", "WIB", "WIB", "WIB",
+                    "WITA", "WIB", "WITA", "WITA", "WITA", "WITA", "WITA", "WITA", "WITA", "WITA", "WITA", "WITA", "WITA", "WITA", "WITA",
+                    "WITA", "WIT", "WIT", "WIT", "WIT"};
 
-        for (int i = 0; i < namaKota.length; i++) {
-            Kota kota = new Kota();
-            kota.setIdKota(idKota[i]);
-            kota.setNamaKota(namaKota[i]);
-            kota.setTimeZone(timeZone[i]);
-            daoSession.getKotaDao().insert(kota);
+            for (int i = 0; i < namaKota.length; i++) {
+                Kota kota = new Kota();
+                kota.setIdKota(idKota[i]);
+                kota.setNamaKota(namaKota[i]);
+                kota.setTimeZone(timeZone[i]);
+                daoSession.getKotaDao().insert(kota);
+            }
         }
+    }
+
+    private void firstTime() {
+
         if (JadwalUtils.hasGPSDevice(this)) {
             setLocation();
-            Intent i = new Intent(this, CalendarV2Activity.class);
-            startActivity(i);
         } else {
-            Intent i = new Intent(this, SettingActivity.class);
-            startActivity(i);
+            goToHome();
         }
     }
 
@@ -191,14 +99,26 @@ public class SplashActivity extends AppCompatActivity implements LocationListene
 
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(provider);
-        if(location != null){
-            onLocationChanged(location);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermission();
+        } else {
+            Location location = locationManager.getLastKnownLocation(provider);
+            locationManager.requestLocationUpdates(provider, 1000, 1, this);
+            if (location != null) {
+                onLocationChanged(location);
+            } else {
+                goToSetting();
+            }
         }
     }
 
     private void goToHome() {
         Intent i = new Intent(this, CalendarV2Activity.class);
+        startActivity(i);
+    }
+
+    private void goToSetting() {
+        Intent i = new Intent(this, SettingActivity.class);
         startActivity(i);
     }
 
@@ -210,8 +130,12 @@ public class SplashActivity extends AppCompatActivity implements LocationListene
 
     private void requestPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Toast.makeText(this, "Jika anda mengijinkan GPS Permission aplikasi dapat dibuka, Tolong ijinkan GPS Permission untuk bisa menggunakan aplikasi ini", Toast.LENGTH_SHORT).show();
-            finish();
+            if (SPJadwalSholat.getIsFirst(this)) {
+                insertCity();
+                goToSetting();
+            } else {
+                goToHome();
+            }
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
         }
@@ -228,8 +152,12 @@ public class SplashActivity extends AppCompatActivity implements LocationListene
                         goToHome();
                     }
                 } else {
-                    Toast.makeText(this, "Access Denied", Toast.LENGTH_SHORT).show();
-                    finish();
+                    if (SPJadwalSholat.getIsFirst(this)) {
+                        insertCity();
+                        firstTime();
+                    } else {
+                        goToHome();
+                    }
                 }
         }
     }
@@ -240,14 +168,14 @@ public class SplashActivity extends AppCompatActivity implements LocationListene
         double lng = location.getLongitude();
 
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try{
+        try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             String region = addresses.get(0).getLocality();
             String city = addresses.get(0).getSubAdminArea();
             SPJadwalSholat.setRegion(this, region);
             SPJadwalSholat.setKota(this, city);
         } catch (IOException e) {
-            e.printStackTrace();
+            goToSetting();
         }
     }
 

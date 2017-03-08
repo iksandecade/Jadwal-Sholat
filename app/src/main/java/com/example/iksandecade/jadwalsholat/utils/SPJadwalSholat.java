@@ -95,4 +95,6 @@ public class SPJadwalSholat {
     public static String getRegion(Context context) {
         return getSharedPrefences(context).getString(REGION, "Cimahi");
     }
+
+
 }

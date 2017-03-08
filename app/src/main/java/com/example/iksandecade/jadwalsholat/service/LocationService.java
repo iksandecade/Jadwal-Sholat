@@ -1,8 +1,10 @@
 package com.example.iksandecade.jadwalsholat.service;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.example.iksandecade.jadwalsholat.utils.SPJadwalSholat;
@@ -38,7 +41,7 @@ public class LocationService extends Service implements LocationListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Handler h = new Handler();
-        int delay = 60000;
+        int delay = 10000;
         h.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -55,7 +58,18 @@ public class LocationService extends Service implements LocationListener {
 
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Location location = locationManager.getLastKnownLocation(provider);
+        locationManager.requestLocationUpdates(provider, 1000, 1, this);
         if (location != null) {
             onLocationChanged(location);
         }
