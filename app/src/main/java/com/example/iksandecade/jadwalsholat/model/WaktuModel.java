@@ -8,6 +8,7 @@ public class WaktuModel {
 
     private String jadwal;
     private Long waktu;
+    private boolean separator;
 
     public WaktuModel() {
 
@@ -27,5 +28,13 @@ public class WaktuModel {
 
     public void setWaktu(Long waktu) {
         this.waktu = waktu;
+    }
+
+    public boolean getSeparator() {
+        return separator;
+    }
+
+    public void setSeparator(boolean separator) {
+        this.separator = separator;
     }
 }

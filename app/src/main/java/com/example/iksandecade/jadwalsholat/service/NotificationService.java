@@ -10,8 +10,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
-import com.example.iksandecade.jadwalsholat.MainActivity;
 import com.example.iksandecade.jadwalsholat.R;
+import com.example.iksandecade.jadwalsholat.SettingActivity;
 import com.example.iksandecade.jadwalsholat.utils.SPJadwalSholat;
 
 import static com.example.iksandecade.jadwalsholat.utils.JadwalUtils.getSisa;
@@ -77,7 +77,7 @@ public class NotificationService extends Service {
                         .setContentTitle("Dzuhur")
                         .setContentText(getSisa(lastSecond) + " remaining");
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, SettingActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(contentIntent);

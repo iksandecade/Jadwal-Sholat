@@ -17,54 +17,45 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by iksandecade on 21/02/17.
+ * Created by iksandecade on 03/03/17.
  */
 
-public class MainRecyclerAdapter extends AdapterDelegate<List<WaktuModel>> {
+public class SeparatorAdapter extends AdapterDelegate<List<WaktuModel>> {
     private LayoutInflater layoutInflater;
 
-    MainRecyclerAdapter(Activity activity) {
+    SeparatorAdapter(Activity activity) {
         this.layoutInflater = activity.getLayoutInflater();
     }
 
     @Override
     protected boolean isForViewType(@NonNull List<WaktuModel> items, int position) {
-        return !items.get(position).getSeparator();
+        return items.get(position).getSeparator();
     }
 
     @NonNull
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent) {
-        return new MainRecycleHolder(layoutInflater.inflate(R.layout.item_main, parent, false));
+        return new SeparatorHolder(layoutInflater.inflate(R.layout.item_separator, parent, false));
     }
 
     @Override
     protected void onBindViewHolder(@NonNull List<WaktuModel> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
-        MainRecycleHolder mainRecycleHolder = (MainRecycleHolder) holder;
-        String jadwal = items.get(position).getJadwal();
-        long waktu = items.get(position).getWaktu();
-        mainRecycleHolder.tvJadwal.setText(jadwal);
-        mainRecycleHolder.tvWaktu.setText(getWaktu(waktu));
+        SeparatorHolder separatorHolder = (SeparatorHolder) holder;
+        separatorHolder.tvDays.setText(getWaktu(items.get(position).getWaktu()));
     }
 
+    private static class SeparatorHolder extends RecyclerView.ViewHolder {
+        TextView tvDays;
+        public SeparatorHolder(View itemView) {
+            super(itemView);
+            tvDays = (TextView) itemView.findViewById(R.id.tvDays);
+        }
+    }
 
     private String getWaktu(long data) {
 
         Date date = new Date(data);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("kk:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd");
         return simpleDateFormat.format(date);
     }
-
-    private static class MainRecycleHolder extends RecyclerView.ViewHolder {
-        TextView tvJadwal;
-        TextView tvWaktu;
-
-        MainRecycleHolder(View view) {
-            super(view);
-            tvJadwal = (TextView) itemView.findViewById(R.id.tvJadwal);
-            tvWaktu = (TextView) itemView.findViewById(R.id.tvWaktu);
-        }
-    }
-
-
 }

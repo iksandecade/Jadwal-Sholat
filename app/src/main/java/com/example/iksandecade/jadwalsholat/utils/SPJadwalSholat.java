@@ -17,6 +17,7 @@ public class SPJadwalSholat {
     private static final String TODAY_ISYA = "TODAY_ISYA";
     private static final String IS_FIRST = "IS_FIRST";
     private static final String KOTA = "KOTA";
+    private static final String REGION = "REGION";
 
 
     private static SharedPreferences getSharedPrefences(Context context) {
@@ -85,5 +86,13 @@ public class SPJadwalSholat {
 
     public static String getKota(Context context) {
         return getSharedPrefences(context).getString(KOTA, "Surabaya");
+    }
+
+    public static void setRegion(Context context, String region) {
+        getSharedPrefences(context).edit().putString(REGION, region).commit();
+    }
+
+    public static String getRegion(Context context) {
+        return getSharedPrefences(context).getString(REGION, "Cimahi");
     }
 }

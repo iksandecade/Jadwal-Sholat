@@ -4,14 +4,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.example.iksandecade.jadwalsholat.adapter.CalendarPagerAdapter;
@@ -39,7 +43,7 @@ import java.util.List;
 
 public class CalendarV2Activity extends AppCompatActivity {
 
-    TabLayout tabLayout;
+    TextSwitcher tvToday;
     TextView tvShalat;
     TextView tvRemaining;
     ViewPager vpCalendar;
@@ -52,59 +56,36 @@ public class CalendarV2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_ver2);
         vpCalendar = (ViewPager) findViewById(R.id.vpCalendar);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tvToday = (TextSwitcher) findViewById(R.id.tsToday);
         tvRemaining = (TextView) findViewById(R.id.tvRemaining);
         tvShalat = (TextView) findViewById(R.id.tvShalat);
         daoSession = DaoHandler.getInstance(this);
 
-        jadwalList = daoSession.getJadwalDao().queryBuilder().where(JadwalDao.Properties.Filter.between(getNow(), getNow() + ((24 * 60 * 60 * 1000))*7), JadwalDao.Properties.Region.eq(SPJadwalSholat.getKota(this))).list();
-        tabLayout.addTab(tabLayout.newTab().setText("today"));
-        tabLayout.addTab(tabLayout.newTab().setText("today"));
-
+        jadwalList = daoSession.getJadwalDao().queryBuilder().where(JadwalDao.Properties.Filter.between(getNow(), getNow() + ((24 * 60 * 60 * 1000)) * 7), JadwalDao.Properties.Region.eq(SPJadwalSholat.getKota(this))).list();
         calendarPagerAdapter = new CalendarPagerAdapter(this, jadwalList);
         vpCalendar.setAdapter(calendarPagerAdapter);
         addNotification();
         startService(new Intent(getBaseContext(), NotificationService.class));
+        tvToday.setFactory(() -> {
+            TextView textView = new TextView(CalendarV2Activity.this);
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextSize(20);
+            textView.setTextColor(Color.WHITE);
+            textView.setTypeface(null, Typeface.BOLD);
+            return textView;
+        });
 
+        Animation in = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        Animation out = AnimationUtils.loadAnimation(this, R.anim.fadeout);
+        tvToday.setInAnimation(in);
+        tvToday.setOutAnimation(out);
+        tvToday.setText("today");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         GlobalBus.getEventBus().register(this);
-        vpCalendar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                tabLayout.setScrollPosition(position, positionOffset, true);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                vpCalendar.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
 
     public void gotoSetting(View view) {
@@ -139,7 +120,13 @@ public class CalendarV2Activity extends AppCompatActivity {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void getMessage(Events.DayMessage dayMessage) {
-        tabLayout.getTabAt(0).setText(dayMessage.getDay());
+
+
+        TextView textView = (TextView) tvToday.getCurrentView();
+        String xml = textView.getText().toString();
+        if (!xml.equals(dayMessage.getDay())) {
+            tvToday.setText(dayMessage.getDay());
+        }
     }
 
     @Override
@@ -155,12 +142,11 @@ public class CalendarV2Activity extends AppCompatActivity {
                         .setContentTitle("Dzuhur")
                         .setContentText("10 minute remaining");
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, SettingActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(contentIntent);
 
-        // Add as notification
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(0, builder.build());
     }

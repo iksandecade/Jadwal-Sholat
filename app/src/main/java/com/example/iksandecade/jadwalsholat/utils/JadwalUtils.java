@@ -1,10 +1,14 @@
 package com.example.iksandecade.jadwalsholat.utils;
 
+import android.content.Context;
+import android.location.LocationManager;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -45,6 +49,7 @@ public class JadwalUtils {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
     public static String getNowMonth() {
         DateFormat dateFormat = new SimpleDateFormat("MM");
         Date date = new Date();
@@ -71,4 +76,20 @@ public class JadwalUtils {
         return timestamp.getTime();
     }
 
+    public static String getHari(long data) {
+
+        Date date = new Date(data);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd");
+        return simpleDateFormat.format(date);
+    }
+
+    public static boolean hasGPSDevice(Context context) {
+        final LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (manager == null)
+            return false;
+        final List<String> provider = manager.getAllProviders();
+        if (provider == null)
+            return false;
+        return provider.contains(LocationManager.GPS_PROVIDER);
+    }
 }
